@@ -32,7 +32,7 @@ class FacebookAuthenticate extends BaseAuthenticate
 
     public function authenticate(Request $request, Response $response)
     {
-    	$facebookUser = $this->_getFacebookUser($request->query('access_token'));
+    	$facebookUser = $this->_getFacebookUser($request->data('access_token'));
 
     	if ($facebookUser) {
     		return $facebookUser;
@@ -44,8 +44,8 @@ class FacebookAuthenticate extends BaseAuthenticate
     {
 		try {
 			$response = $this->fb->get('/me?fields=id,name,email,gender,age_range', $accessToken);
-            debug($response->getGraphUser());
-            exit();
+            // debug($response->getGraphUser());
+            // exit();
 			return $this->_getFinalUser($response->getGraphUser());
 
 		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
@@ -59,6 +59,7 @@ class FacebookAuthenticate extends BaseAuthenticate
     {
     	$data = [
     		'nome' => $facebookUser['name'],
+            'email' => $facebookUser['email'],
     		'genero' => $facebookUser['gender'],
     		'facebook_id' => $facebookUser['id']
     	];
@@ -83,8 +84,8 @@ class FacebookAuthenticate extends BaseAuthenticate
 
     	$this->Usuarios->save($entity);
 
-        debug($facebookUser);
-        exit();
+        // debug($facebookUser);
+        // exit();
 
     	return ['id' => $entity->id];
 
